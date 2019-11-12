@@ -7,19 +7,17 @@
 </head>
 <body class="bg-secondary">
 
-<nav th:replace="fragments/navbar :: navbar"></nav>
+<nav th:replace="fragments/navbar :: main-navbar"></nav>
 
 <div class="container">
     <div class="row">
-        <div th:each="post : ${posts}" class="card text-center text-white bg-dark mx-auto mb-3 col-4" style="max-width: 18rem;">
+        <div th:each="post : ${posts}" class="card text-center mx-auto mb-3 col-4" style="max-width: 18rem;">
             <a th:href="@{'/posts/' + ${post.id}}">
                 <div class="card-header">Header</div>
                 <h3 th:text="${post.title}" class="card-title"></h3>
                 <p th:text="${post.body}" class="card-text"></p>
                 <input type="hidden" name="post" th:value="${post.id}">
-                <!--            <form th:action="@{'/posts/'+ ${post.id} + '/delete'}" method="post">-->
-                <!--                <button class="btn btn-danger">Delete</button>-->
-                <!--            </form>-->
+
             </a>
         </div>
     </div>
