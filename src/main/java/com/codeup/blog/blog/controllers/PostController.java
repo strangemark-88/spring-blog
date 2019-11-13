@@ -3,12 +3,14 @@ package com.codeup.blog.blog.controllers;
 import com.codeup.blog.blog.models.Post;
 import com.codeup.blog.blog.models.PostImage;
 import com.codeup.blog.blog.models.Tag;
+import com.codeup.blog.blog.models.User;
 import com.codeup.blog.blog.repository.PostImageRepository;
 import com.codeup.blog.blog.repository.PostRepository;
 import com.codeup.blog.blog.repository.TagRepository;
 import com.codeup.blog.blog.repository.UserRepository;
 import com.codeup.blog.blog.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -75,7 +77,7 @@ public class PostController {
 
     @PostMapping("/posts/create")
     public String create(@ModelAttribute Post createdNewPost){
-        createdNewPost.setUser(userDao.getOne(1L));
+        createdNewPost.setUser((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Post post = postDao.save(createdNewPost);
         emailService.prepareAndSend(post, "Ad created", "An ad has been created with this title " + post.getTitle());
         return "redirect:/posts";
