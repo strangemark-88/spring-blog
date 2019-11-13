@@ -10,7 +10,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "UNSIGNED")
+    @Column(columnDefinition = "int(11) UNSIGNED")
     private long id;
 
     @Column(nullable = false)
