@@ -16,6 +16,7 @@
                 <div class="card-header">Header</div>
                 <h3 th:text="${post.title}" class="card-title"></h3>
                 <p th:text="${post.body}" class="card-text"></p>
+                <span th:each="tag : ${post.tags}" th:text="${tag.name}"></span>
                 <input type="hidden" name="post" th:value="${post.id}">
 
             </a>

@@ -6,28 +6,30 @@ import com.codeup.blog.blog.models.Tag;
 import com.codeup.blog.blog.repository.PostImageRepository;
 import com.codeup.blog.blog.repository.PostRepository;
 import com.codeup.blog.blog.repository.TagRepository;
+import com.codeup.blog.blog.repository.UserRepository;
+import com.codeup.blog.blog.services.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 @Controller
 public class PostController {
-
     private final PostRepository postDao;
-
     private final PostImageRepository postImageDao;
-
     private final TagRepository tagDao;
+    private final UserRepository userDao;
+    @Autowired
+    EmailService emailService;
 
-    public PostController(PostRepository postDao, PostImageRepository postImageDao, TagRepository tagDao) {
+    public PostController(PostRepository postDao, PostImageRepository postImageDao, TagRepository tagDao, UserRepository userDao) {
         this.postDao = postDao;
         this.postImageDao = postImageDao;
         this.tagDao = tagDao;
+        this.userDao= userDao;
     }
-
     @GetMapping("/posts")
     public String index(Model model){
 
@@ -37,21 +39,11 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
-    public String viewIndividualPost(@PathVariable long id, Model vModel){
-        vModel.addAttribute("post", postDao.getOne(id));
-        return "posts/show";
-    }
+    public String show(@PathVariable long id, Model model){
 
-    @GetMapping("/posts/create")
-    @ResponseBody
-    public String showForm(){
-        return "view the form for creating a post";
-    }
+        model.addAttribute("post", postDao.getOne(id));
 
-    @PostMapping("/posts/create")
-    @ResponseBody
-    public String createPost(@RequestParam String title, @RequestParam String body){
-        return "create a new post";
+        return  "posts/show";
     }
 
     @GetMapping("/posts/{id}/edit")
@@ -73,6 +65,19 @@ public class PostController {
     public String deletePostBy(@RequestParam("id")  String id){
         long deleteId = Long.parseLong(id);
         postDao.deleteById(deleteId);
+        return "redirect:/posts";
+    }
+    @GetMapping("/posts/create")
+    public String showForm(Model model){
+        model.addAttribute("posts", new Post());
+        return  "posts/create";
+    }
+
+    @PostMapping("/posts/create")
+    public String create(@ModelAttribute Post createdNewPost){
+        createdNewPost.setUser(userDao.getOne(1L));
+        Post post = postDao.save(createdNewPost);
+        emailService.prepareAndSend(post, "Ad created", "An ad has been created with this title " + post.getTitle());
         return "redirect:/posts";
     }
 
@@ -115,5 +120,6 @@ public class PostController {
         tagDao.save(new Tag(tag, Arrays.asList(post)));
         return "redirect:/post-tags";
     }
+
 
 }
