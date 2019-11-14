@@ -1,4 +1,4 @@
-package com.codeup.blog.blog;
+package com.codeup.blog.blog.config;
 
 import com.codeup.blog.blog.services.UserDetailsLoader;
 import org.springframework.context.annotation.Bean;
