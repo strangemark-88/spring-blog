@@ -130,25 +130,25 @@ public class PostsIntegrationTests {
                 .andExpect(content().string(containsString("edited description")));
     }
 
-    @Test
-    public void testDeleteAd() throws Exception {
-
-        this.mvc.perform(
-                post("/posts/create").with(csrf())
-                        .session((MockHttpSession) httpSession)
-                        .param("title", "post to be deleted")
-                        .param("description", "won't last long"))
-                .andExpect(status().is3xxRedirection());
-
-
-        Post existingPost = postsDao.findByTitle("post to be deleted");
-
-        this.mvc.perform(
-                post("/posts/" + existingPost.getId() + "/delete").with(csrf())
-                        .session((MockHttpSession) httpSession)
-                        .param("id", String.valueOf(existingPost.getId())))
-                .andExpect(status().is3xxRedirection());
-    }
+//    @Test
+//    public void testDeleteAd() throws Exception {
+//
+//        this.mvc.perform(
+//                post("/posts/create").with(csrf())
+//                        .session((MockHttpSession) httpSession)
+//                        .param("title", "post to be deleted")
+//                        .param("description", "won't last long"))
+//                .andExpect(status().is3xxRedirection());
+//
+//
+//        Post existingPost = postsDao.findByTitle("post to be deleted");
+//
+//        this.mvc.perform(
+//                post("/posts/" + existingPost.getId() + "/delete").with(csrf())
+//                        .session((MockHttpSession) httpSession)
+//                        .param("id", String.valueOf(existingPost.getId())))
+//                .andExpect(status().is3xxRedirection());
+//    }
 
 
 }
